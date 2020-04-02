@@ -1,0 +1,35 @@
+{
+  "name": "devjobsnode",
+  "version": "1.0.0",
+  "description": "Portal de trabajo para desarrolladores. NodeJS, hbs, mongodb",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon index.js",
+    "watch": "webpack --w --mode development",
+    "start": "concurrently \"npm run dev\" \"npm run watch\" "
+  },
+  "author": "Martin Brisset",
+  "license": "ISC",
+  "dependencies": {
+    "@handlebars/allow-prototype-access": "^1.0.3",
+    "concurrently": "^5.1.0",
+    "connect-mongo": "^3.2.0",
+    "cookie-parser": "^1.4.5",
+    "express": "^4.17.1",
+    "express-handlebars": "^4.0.0",
+    "express-session": "^1.17.0",
+    "handlebars": "^4.7.5",
+    "mongoose": "^5.9.7",
+    "morgan": "^1.10.0",
+    "shortid": "^2.2.15",
+    "slug": "^2.1.1"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.9.0",
+    "@babel/preset-env": "^7.9.0",
+    "babel-loader": "^8.1.0",
+    "nodemon": "^2.0.2",
+    "webpack": "^4.42.1",
+    "webpack-cli": "^3.3.11"
+  }
+}
