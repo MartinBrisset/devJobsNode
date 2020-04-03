@@ -1,8 +1,17 @@
 document.addEventListener('DOMContentLoaded' , () => {
     const skills = document.querySelector('.lista-conocimientos');
 
+    //limbiar las alertas iniciadas
+    let alertas = document.querySelector('.alertas');
+    if (alertas) {
+        limpiarAlertas(alertas);
+    }
+
     if (skills) {
         skills.addEventListener('click' , agregarSkills);
+
+        //esta funcion se llama cuando estamos en la parte de editar
+        skillsSeleccionados();
     }
 })
 //utilizamos set, funciona parecido a un array pero es mas facil de manipular[]
@@ -23,4 +32,33 @@ const agregarSkills = (e) => {
 
     const skillsArray = [...skills] //convertir el set a un array para agregarlo al html
     document.querySelector('#skills').value = skillsArray;
+}
+
+const skillsSeleccionados = () => {
+    //lee la clase del array de skills (activo) y genera un array para luego introducirlo en el html
+    const seleccionadas = Array.from(document.querySelectorAll('.lista-conocimientos .activo')); //lee la la clase y generar el array
+
+    //recorrer el array y llenar el set
+    seleccionadas.forEach(seleccionada => {
+        skills.add(seleccionada.textContent);
+    })
+
+    //inyectarlo en el html hidden
+    const skillsArray = [...skills] //convertir el set a un array para agregarlo al html
+    document.querySelector('#skills').value = skillsArray;
+
+}
+
+const limpiarAlertas = (alertas) => {
+
+    const interval = setInterval(() => {
+        if (alertas.children.length > 0) {
+            alertas.removeChild(alertas.children[0]);
+        } else if (alertas.children.length === 0) {
+            alertas.parentElement.removeChild(alertas);
+            clearInterval(interval);
+        }
+    }, 2000);
+
+    
 }

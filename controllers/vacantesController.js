@@ -20,3 +20,61 @@ exports.agregarVacate = async (req, res) => {
     //redireccionar a la nueva vacante creada
     res.redirect(`/vacantes/${nuevaVacante.url}`);
 }
+
+exports.mostrarVacante = async (req, res) => {
+    const vacante = await Vacante.findOne({ url: req.params.url });
+
+    if (!vacante) {        
+        return res.render('home' ,{
+            nombrePagina: 'DevJobs',
+            tagline: 'Encuentra y publica trabajos para desarrolladores',
+            barra: true,
+            boton: true
+        })
+    }
+    res.render('vacante' , {
+        vacante,
+        nombrePagina : vacante.titulo,
+        barra: true
+    })
+}
+
+exports.formEditarVacante = async (req, res) => {
+    const vacante = await Vacante.findOne({ url: req.params.url });
+
+    if (!vacante) {        
+        return res.render('home' ,{
+            nombrePagina: 'DevJobs',
+            tagline: 'Encuentra y publica trabajos para desarrolladores',
+            barra: true,
+            boton: true
+        })
+    }
+
+    res.render('editar-vacante', {
+        vacante,
+        nombrePagina: `Editar - ${vacante.titulo}`
+    })
+}
+
+exports.editarVacante = async (req, res) => {
+    vacanteActualizada = req.body;
+
+    vacanteActualizada.skills = req.body.skills.split(','); //pasarlo como un array en el objeto a guardar en bd
+
+    const vacante = await Vacante.findOneAndUpdate({url:req.params.url} , vacanteActualizada, {
+        new: true,
+        runValidators: true
+    });
+
+    if (!vacante) {        
+        return res.render('home' ,{
+            nombrePagina: 'DevJobs',
+            tagline: 'Encuentra y publica trabajos para desarrolladores',
+            barra: true,
+            boton: true
+        })
+    }
+
+    res.redirect(`/vacantes/${vacante.url}`);
+}
