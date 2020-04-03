@@ -13,6 +13,7 @@ const session = require('express-session');
 const mongoStore= require('connect-mongo')(session);
 const expressValidator = require('express-validator');
 const flash = require('connect-flash');
+const passport = require('./config/passport');
 
 const app = express();
 
@@ -45,6 +46,10 @@ app.use(session({
     saveUninitialized: false,
     store: new mongoStore({mongooseConnection: mongoose.connection})
 }));
+
+//inicializar passport
+app.use(passport.initialize());
+app.use(passport.session());
 
 //alertas y flash messages
 app.use(flash());
