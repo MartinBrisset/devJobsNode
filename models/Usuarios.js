@@ -21,7 +21,8 @@ const usuariosSchema = new mongoose.Schema({
         trim: true
     },
     token: String,
-    expira: String
+    expira: String,
+    imagen: String
 });
 
 //metodo para encriptar los passwords

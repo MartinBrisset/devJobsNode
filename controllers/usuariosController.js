@@ -1,4 +1,28 @@
 const Usuarios = require('../models/Usuarios');
+const multer = require('multer');
+
+//opiones de multer
+const configuracionMulter = {
+    storage: fileStorage = multer.diskStorage({
+        destination: (req, file, cb) => {
+            cb(null, __dirname+'../../public/public/perfiles');
+        },
+        filename: (req, file, cb) => {
+            console.log(file);
+        }
+    })
+}
+
+const upload = multer(configuracionMulter).single('imagen');
+
+exports.subirImagen = (req, res, next) => {
+    upload(req, res, function(error) {
+        if(error instanceof multer.MulterError) {
+            return next();
+        }
+    })
+    next();
+}
 
 exports.formCrearCuenta = (req, res) => {
     res.render('crear-cuenta', {
@@ -93,25 +117,26 @@ exports.editarPerfil = async (req, res) => {
 }
 
 exports.validarPerfil = (req, res, next) => {
-    //sanitizar
+    console.log(req.body);
+    // sanitizar
     req.sanitizeBody('nombre').escape();
     req.sanitizeBody('email').escape();
 
     if(req.body.password){
         req.sanitizeBody('password').escape();
     }
-
-    //validar
+    // validar
     req.checkBody('nombre', 'El nombre no puede ir vacio').notEmpty();
     req.checkBody('email', 'El correo no puede ir vacio').notEmpty();
 
     const errores = req.validationErrors();
 
+
     if(errores) {
         req.flash('error', errores.map(error => error.msg));
 
         return res.render('editar-perfil', {
-            nombrePagina : 'Edita tu perfil en devJobs',
+            nombrePagina : 'Edita tu perfil',
             usuario: req.user,
             cerrarSesion: true,
             nombre : req.user.nombre,
@@ -121,3 +146,4 @@ exports.validarPerfil = (req, res, next) => {
     }
     next();
 }
+
