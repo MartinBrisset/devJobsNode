@@ -3,13 +3,18 @@ const Vacante = require('../models/Vacantes');
 exports.FormularioNuevaVacante = (req, res) => {
     res.render('nueva-vacante' , {
         nombrePagina: 'Nueva vacante',
-        tagline: 'Completa el formulario y publica tu oferta de empleo'
+        tagline: 'Completa el formulario y publica tu oferta de empleo',
+        cerrarSesion: true,
+        nombre: req.user.nombre
     })
 }
 
 //agregar vacante a la bd con los datos del formulario
 exports.agregarVacate = async (req, res) => {
     const vacante = new Vacante(req.body);
+
+    //usuarios autor de la vacante
+    vacante.autor = req.user._id;
 
     //crear array de los skills
     vacante.skills = req.body.skills.split(','); // convierte a un array los elementos separados con una coma ,
@@ -53,6 +58,8 @@ exports.formEditarVacante = async (req, res) => {
 
     res.render('editar-vacante', {
         vacante,
+        cerrarSesion: true,
+        nombre: req.user.nombre,
         nombrePagina: `Editar - ${vacante.titulo}`
     })
 }

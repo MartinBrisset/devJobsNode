@@ -60,3 +60,34 @@ exports.formIniciarSesion = (req, res) => {
         nombrePagina: 'Iniciar sesion'
     })
 }
+
+exports.formEditarPerfil = (req, res) => {
+    res.render('editar-perfil', {
+        nombrePagina: 'Edita tu perfil',
+        usuario: req.user,
+        cerrarSesion: true,
+        nombre: req.user.nombre
+    })
+}
+
+exports.editarPerfil = async (req, res) => {
+    const usuario = await Usuarios.findById(req.user._id);
+
+    if (!usuario) {
+        return res.redirect('/iniciar-sesion');
+    }
+
+    //reescribir los datos
+    usuario.nombre = req.body.nombre;
+    usuario.email = req.body.email;
+    if (req.body.password) {
+        usuario.password = req.body.password
+    }
+    await usuario.save(); //guarda el usuario con los datos del formulario
+
+    req.flash('correcto', 'Cambios guardados')
+    // req.user = usuario;
+
+    //redirecciona
+    res.redirect('/administracion')
+}
