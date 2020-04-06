@@ -122,6 +122,26 @@ exports.validarVacante = (req, res, next) => {
 }
 
 exports.eliminarVacante = async (req, res) => {
+    //captura el id de la vacante a eliminar
     const { id } = req.params;
-    console.log(id);
+    //borra la vacante de la bd
+    const vacante = await Vacante.findById(id);
+
+    if (verificarAutor(vacante, req.user)) {
+        //todo correcto, este usuario creo la vacante, la puede eliminar
+        await vacante.remove();
+        //contesta al frontend
+        res.status(200).send('Vacante eliminada')
+    } else {
+        //no podes elimar una vacante que creo otro usuario
+        res.status(403).send('Error')
+    }
+
+}
+
+const verificarAutor = (vacante = {}, usuario = {}) => {
+    if (!vacante.autor.equals(usuario._id)) {
+        return false;
+    }
+    return true;
 }

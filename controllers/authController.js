@@ -22,7 +22,7 @@ exports.verificarUsuario = (req, res, next) => { //esto es un middleware
 
 exports.mostrarPanel = async (req, res) => {
 
-    //consultar el usuario que esta autenticado en ese momento
+    //solicita las vacante para el usuario que esta autenticado en ese momento
     const vacantes = await Vacante.find({autor: req.user._id});
 
     res.render('administracion', {

@@ -16,6 +16,12 @@ document.addEventListener('DOMContentLoaded' , () => {
         //esta funcion se llama cuando estamos en la parte de editar
         skillsSeleccionados();
     }
+
+    const vacantesListado = document.querySelector('.panel-administracion');
+    if (vacantesListado) {
+        vacantesListado.addEventListener('click', accionesListado);
+    }
+
 })
 //utilizamos set, funciona parecido a un array pero es mas facil de manipular[]
 const skills = new Set();
@@ -64,4 +70,58 @@ const limpiarAlertas = (alertas) => {
     }, 2000);
 
     
+}
+
+//elimiar vacantes
+const accionesListado = (e) => {
+    e.preventDefault();
+    
+    if (e.target.dataset.eliminar) {
+        //ei tocas el boton, eliminar por medio de axios
+        Swal.fire({
+            title: '¿Confirmar Eliminación?',
+            text: "Una vez eliminada, no se puede recuperar",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Si, Eliminar',
+            cancelButtonText : 'No, Cancelar'
+        }).then((result) => {
+            if (result.value) {
+                //enviar peticion con axios para elimar
+                const url = `${location.origin}/vacantes/eliminar/${e.target.dataset.eliminar}`;
+                //lo que hace esto es, leer la url actual y le agrega la ruta con el id para luego ponerselo a la accion de axios.activo
+                //el id lo toma de e.target.dataset.eliminar que es la parte de html que tiene el boton
+                
+                //axios para hacer la peticin http y elimnar el registro
+
+                axios.delete(url)
+                    .then(function(respuesta) {
+                        if (respuesta.status === 200) {
+                            Swal.fire(
+                                'Eliminado',
+                                respuesta.data,
+                                'success'
+                            );
+                            //elimar del dom
+                            e.target.parentElement.parentElement.parentElement.removeChild(e.target.parentElement.parentElement);
+                            //primero navega hacia atras hasta llegar al div panel-administracion
+                            //despues con removeChild borra los hijos de esta clase
+                            //pasandole el parentElement 2 veces, borra sus 2 hijos. las divs
+                        }
+                    }).catch(() => {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Hubo un error',
+                            text: 'No puedes elimar una vacante que tu no creaste'
+                        })
+                    })
+                    
+            }
+          })
+    } else if (e.target.tagName === 'A'){ //si tiene enlace, sino no (a href) 
+        //si tocas los otros botones, le haces caso al href que tienen
+        window.location.href = e.target.href;
+    }
 }
