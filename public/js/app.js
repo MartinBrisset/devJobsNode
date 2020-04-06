@@ -1,3 +1,6 @@
+import axios from 'axios';
+import Swal from 'sweetalert2';
+
 document.addEventListener('DOMContentLoaded' , () => {
     const skills = document.querySelector('.lista-conocimientos');
 

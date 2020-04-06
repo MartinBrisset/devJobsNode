@@ -85,3 +85,43 @@ exports.editarVacante = async (req, res) => {
 
     res.redirect(`/vacantes/${vacante.url}`);
 }
+
+//validar y sanitizar los campos de las nuevas vacantes
+exports.validarVacante = (req, res, next) => {
+    //sanitizar los campos
+
+    req.sanitizeBody('titulo').escape();
+    req.sanitizeBody('empresa').escape();
+    req.sanitizeBody('ubicacion').escape();
+    req.sanitizeBody('salario').escape();
+    req.sanitizeBody('contrato').escape();
+    req.sanitizeBody('skills').escape();
+
+    //validar
+    req.checkBody('titulo', 'Agrega un titulo a la vacante').notEmpty();
+    req.checkBody('empresa', 'Agrega una empresa a la vacante').notEmpty();
+    req.checkBody('ubicacion', 'Agrega una ubicacion a la vacante').notEmpty();
+    req.checkBody('contrato', 'Agrega un tipo de contrato a la vacante').notEmpty();
+    req.checkBody('skills', 'Agrega al menos una habilidad a la vacante').notEmpty();
+
+    const errores = req.validationErrors();
+
+    if(errores){
+        //recargar la vista con los errores
+        req.flash('error', errores.map(error => error.msg))
+
+        res.render('nueva-vacante',{
+            nombrePagina: 'Nueva vacante',
+            tagline: 'Completa el formulario y publica tu oferta de empleo',
+            cerrarSesion: true,
+            nombre: req.user.nombre,
+            mensajes: req.flash()
+        })
+    }
+    next();
+}
+
+exports.eliminarVacante = async (req, res) => {
+    const { id } = req.params;
+    console.log(id);
+}
