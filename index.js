@@ -18,11 +18,11 @@ const passport = require('./config/passport');
 const app = express();
 
 // validación de campos
-app.use(expressValidator());
+app.use(expressValidator()); //es una reverenda poronga, no lo uses nunca mas en tu vida xq funciona como el orto!!!
 
 app.use(morgan('dev')); //muestra la ruta en la consola
-app.use(express.urlencoded({extended:true})); //recibe datos, archivos, etc
 app.use(express.json()); //recibir datos json
+app.use(express.urlencoded({extended:true})); //recibe datos, archivos, etc
 
 //habilitar hbs como template
 app.engine('handlebars',

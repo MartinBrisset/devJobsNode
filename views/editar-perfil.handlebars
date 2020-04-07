@@ -1,12 +1,14 @@
 <main class="contenedor">
     <form action="/editar-perfil" method="POST" class="default-form" enctype="multipart/form-data">
+
         <div class="campo">
             <label>Nombre</label>
-            <input value={{usuario.nombre}} type="text" name="nombre" placeholder="Tu Nombre">
+            <input type="text" name="nombre" placeholder="Tu Nombre" value="{{usuario.nombre}}">
         </div>
+    
         <div class="campo">
             <label>E-mail</label>
-            <input value={{usuario.email}} type="email" name="email" placeholder="Tu E-mail">
+            <input type="email" name="email" placeholder="Tu E-mail" required value="{{usuario.email}}">
         </div>
         <div class="campo">
             <label>Password</label>

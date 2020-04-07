@@ -110,7 +110,7 @@ exports.validarVacante = (req, res, next) => {
         //recargar la vista con los errores
         req.flash('error', errores.map(error => error.msg))
 
-        res.render('nueva-vacante',{
+        return res.render('nueva-vacante',{
             nombrePagina: 'Nueva vacante',
             tagline: 'Completa el formulario y publica tu oferta de empleo',
             cerrarSesion: true,
