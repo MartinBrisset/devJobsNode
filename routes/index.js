@@ -40,5 +40,8 @@ module.exports = () => {
     router.get('/editar-perfil' ,authController.verificarUsuario, usuariosController.formEditarPerfil)
     router.post('/editar-perfil', authController.verificarUsuario, usuariosController.subirImagen, usuariosController.editarPerfil)
 
+    //recibir mensajes de candidatos
+    router.post('/vacantes/:url', vacantesController.subirCV, vacantesController.contactar)
+
     return router;
 }

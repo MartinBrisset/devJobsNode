@@ -1,11 +1,14 @@
 const Vacante = require('../models/Vacantes');
+const multer = require('multer');
+const shortId = require('shortid');
 
 exports.FormularioNuevaVacante = (req, res) => {
     res.render('nueva-vacante' , {
         nombrePagina: 'Nueva vacante',
         tagline: 'Completa el formulario y publica tu oferta de empleo',
         cerrarSesion: true,
-        nombre: req.user.nombre
+        nombre: req.user.nombre,
+        imagen: req.user.imagen
     })
 }
 
@@ -27,7 +30,7 @@ exports.agregarVacate = async (req, res) => {
 }
 
 exports.mostrarVacante = async (req, res) => {
-    const vacante = await Vacante.findOne({ url: req.params.url });
+    const vacante = await Vacante.findOne({ url: req.params.url }).populate('autor');
 
     if (!vacante) {        
         return res.render('home' ,{
@@ -60,7 +63,8 @@ exports.formEditarVacante = async (req, res) => {
         vacante,
         cerrarSesion: true,
         nombre: req.user.nombre,
-        nombrePagina: `Editar - ${vacante.titulo}`
+        nombrePagina: `Editar - ${vacante.titulo}`,
+        imagen: req.user.imagen
     })
 }
 
@@ -144,4 +148,57 @@ const verificarAutor = (vacante = {}, usuario = {}) => {
         return false;
     }
     return true;
+}
+
+//subir archivos pdf
+exports.subirCV = (req, res, next) => {
+    //si existe archivo ejecuta funcion upload y luego next
+    upload(req, res, function(error) {
+        if (error) {
+            if(error instanceof multer.MulterError) {
+                if (error.code === 'LIMIT_FILE_SIZE') {
+                    req.flash('error', 'El archivo es muy grande, maximo 100kb');
+                } else {
+                    req.flash('error', error.message);
+                }
+            } else {
+                req.flash('error', error.message);
+            }
+            //cuando llega aca, tiene el mensaje del error 
+            return res.redirect('back');
+        } else {
+            //si no existen errores al subir el archivo o no hay archivo, next a la sigueinte funcion
+            return next();
+        }
+    });
+}
+
+//opiones de multer
+const configuracionMulter = {
+    limits: {fileSize: 100000},
+    storage: fileStorage = multer.diskStorage({
+        destination: (req, file, cb) => {
+            cb(null, __dirname+'../../public/uploads/cv');
+        },
+        filename: (req, file, cb) => {
+            const extension = file.mimetype.split('/')[1];
+            const nombreArchivo = `${shortId.generate()}.${extension}`;
+            cb(null, nombreArchivo);
+        }
+    }),
+    fileFilter(req, file, cb) {
+        if (file.mimetype === 'application/pdf') {
+            //se ejecuta el callback (cb) segun si cumple la condicion de ser un formato aceptado o no da true o false
+            cb(null, true);
+        } else {
+            cb(new Error('Formato no valido'), false);
+        }
+    }
+}
+
+const upload = multer(configuracionMulter).single('cv');
+
+
+exports.contactar = (req, res) => {
+
 }
