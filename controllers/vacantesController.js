@@ -165,7 +165,7 @@ exports.subirCV = (req, res, next) => {
                 req.flash('error', error.message);
             }
             //cuando llega aca, tiene el mensaje del error 
-            return res.redirect('back');
+            return res.redirect('back');//vuelve a la pagina anterior
         } else {
             //si no existen errores al subir el archivo o no hay archivo, next a la sigueinte funcion
             return next();
@@ -198,7 +198,47 @@ const configuracionMulter = {
 
 const upload = multer(configuracionMulter).single('cv');
 
+//guarda a los posutlados
+exports.contactar = async (req, res) => {
+    const vacante = await Vacante.findOne({url:req.params.url})
+    //si no existe la vacante, es xq el usuario se mamo asi que mandalo pa la cucha
+    //deberia tambien de eliinar el archivo pasandole una funcion o algo similar
+    if (!vacante) {
+        req.flash('error', 'La vacante no existe')
+        return res.redirect('back')
+    }
+    //si esta todo ok, crea el objeto de candidato
+    const nuevoCandidato = {
+        nombre: req.body.nombre,
+        email: req.body.email,
+        cv: req.file.filename
+    }
+    //guarda el candidato en la vacante
+    vacante.candidatos.push(nuevoCandidato);
+    await vacante.save();
 
-exports.contactar = (req, res) => {
+    req.flash('correcto', 'Tu CV fue enviado correctamente')
+    res.redirect('/')
+}
 
+exports.mostrarCandidatos = async (req, res) => {
+    const vacante = await Vacante.findById(req.params.id);
+
+    if (!vacante) {
+        req.flash('error', 'Esa vacante no es valida')
+        return res.redirect('/administracion')
+    }
+    //ver solo los candidatos de tus vacantes
+    if (vacante.autor != req.user._id.toString()) { //convierte el dato a string y no lo valida estrictamente con ===, porque internamente no son iguales
+        req.flash('error', 'Solamente puedes ver los candidatos de las vacantes que seas el autor')
+        return res.redirect('/administracion')
+    }
+    //si quiere ver candidatos de una vancante propia...
+    return res.render('candidatos', {
+        nombrePagina: `Candidatos Vacante - ${vacante.titulo}`,
+        cerrarSesion: true,
+        nombre: req.user.nombre,
+        imagen: req.user.imagen,
+        candidatos: vacante.candidatos
+    })
 }
