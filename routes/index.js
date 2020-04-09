@@ -29,6 +29,12 @@ module.exports = () => {
     //Autotenticar usuarios
     router.get('/iniciar-sesion', usuariosController.formIniciarSesion);
     router.post('/iniciar-sesion', authController.autenticarUsuarios);
+
+    //resetear password
+    router.get('/reestablecer-password', authController.formReestablecerPassword)
+    router.post('/reestablecer-password', authController.enviarToken)
+    router.get('/reestablecer-password/:token', authController.reestablecerPassword)
+    router.post('/reestablecer-password/:token', authController.guardarPassword)
     
     //cerrar sesion
     router.get('/cerrar-sesion', authController.verificarUsuario, authController.cerrarSesion)
@@ -45,6 +51,9 @@ module.exports = () => {
 
     //muestra los candidatos por vacante
     router.get('/candidatos/:id', authController.verificarUsuario, vacantesController.mostrarCandidatos)
+
+    //buscador
+    router.post('/buscador', vacantesController.buscarVacantes)
 
     return router;
 }

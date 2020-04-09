@@ -57,4 +57,7 @@ vacantesSchema.pre('save', function(next) { //actua como middleware antes de gua
     next();
 })
 
+//crear indice porque tenemos un buscador
+vacantesSchema.index({titulo : 'text'})
+
 module.exports = mongoose.model('Vacante', vacantesSchema);

@@ -20,3 +20,9 @@ exports.mostrarTrabajos = async (req, res) => {
         vacantes
     })
 }
+
+exports.error = (req, res) => {
+    res.render('error-mensaje', {
+        mensaje: 'Error 404 - No encontrado'
+    })
+}
