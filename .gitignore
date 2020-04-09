@@ -1,3 +1,5 @@
 node_modules
 package-lock.json
 config/config.js
+public/uploads/cv/*
+public/uploads/perfiles/*
