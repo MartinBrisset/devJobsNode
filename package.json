@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "nodemon index.js",
     "watch": "webpack --w --mode development",
-    "start": "concurrently \"npm run dev\" \"npm run watch\" "
+    "desarrollo": "concurrently \"npm run dev\" \"npm run watch\" ",
+    "start": "node ./index.js"
   },
   "author": "Martin Brisset",
   "license": "ISC",

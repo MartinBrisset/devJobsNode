@@ -13,7 +13,6 @@ const session = require('express-session');
 const mongoStore= require('connect-mongo')(session);
 const expressValidator = require('express-validator');
 const flash = require('connect-flash');
-const createError = require('http-errors');
 const passport = require('./config/passport');
 
 const app = express();
@@ -63,4 +62,4 @@ app.use((req, res, next) => {
 
 app.use('/', router());
 
-app.listen(process.env.PUERTO);
+app.listen(process.env.PORT);
