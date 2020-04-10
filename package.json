@@ -4,10 +4,10 @@
   "description": "Portal de trabajo para desarrolladores. NodeJS, hbs, mongodb",
   "main": "index.js",
   "scripts": {
+    "start": "node index.js",
     "dev": "nodemon index.js",
     "watch": "webpack --w --mode development",
-    "desarrollo": "concurrently \"npm run dev\" \"npm run watch\" ",
-    "start": "node ./index.js"
+    "desarrollo": "concurrently \"npm run dev\" \"npm run watch\" "
   },
   "author": "Martin Brisset",
   "license": "ISC",
